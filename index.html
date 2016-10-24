@@ -1,58 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html ng-app='app'>
 <head>
   <title>Angular Friends</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body>
-
+<body ng-controller='FriendController'>
   <h1>The <strong>facebook</strong> Friend Machine</h1>
 
   <div class="friends">
     <form class="form-inline searchForm" role="form">
       <div class="form-group">
 
-        <input class="form-control" placeholder="Search Anything About Your Friends">
+        <input class="form-control" placeholder="Search Anything About Your Friends" ng-model="inputSrch">
         <!-- STEP 5: Get rid of the one above when you uncomment the below-->
-          <!--
-        <input class="form-control" placeholder="Search Name">
-        <input class="form-control" placeholder="Search Location">
-          -->
 
-        <select class="input-medium">
-          <option>Name</option>
-          <option>#Friends</option>
-          <option>City</option>
-          <option>State</option>
-          <option>Country</option>
+        <input class="form-control" placeholder="Search Name" ng-model='inputSrch.name'>
+        <input class="form-control" placeholder="Search Location" ng-model='inputSrch.current_location.name'>
+
+
+        <select class="input-medium" ng-model='sortProp'>
+          <option value='name'>Name</option>
+          <option value='friend_count'>#Friends</option>
+          <option value='current_location.city'>City</option>
+          <option value='current_location.state'>State</option>
+          <option value='current_location.country'>Country</option>
         </select>
 
-        <select class="input-medium">
-          <option value="+">Descending</option>
-          <option value="-">Ascending</option>
+        <select class="input-medium" ng-model='sortDirection'>
+          <option value="">Descending</option>
+          <option value="true">Ascending</option>
         </select>
 
       </div>
     </form>
 
-    <ul>
+    <ul ng-repeat='friend in friends | filter:inputSrch | orderBy: sortProp : sortDirection'>
       <li class='friend'>
-        <img class="profile-pic" src='http://placebear.com/50/50.jpg'>
+        <img class="profile-pic" src={{friend.pic_square}} alt={{friend.name}}>
 
-        <h3>Cali Fornia</h3>
+        <h3>{{friend.name || 'No Name'}}</h3>
 
-        <div class="location">
-          Location: New Port Beach, California, United States
+        <div class="location" >
+          Location: {{friend.current_location.city || 'unknown'}}, {{friend.current_location.state || 'unknown'}}, {{friend.current_location.country || 'unknown'}}
         </div>
 
-        <div class="status">
-          Status: I hate the snow. I wish I was on the beach right now!!! <span class="hashtag">#ihateprovo</span>
+        <div class="status" ng-repeato='status in friend'>
+          {{friend.status.message || 'No Update'}}<span class="hashtag">#ihateprovo</span>
         </div>
 
         <div class="num-friends">
-          Friends: 1,367
+          Friends: {{friend.friend_count || ""}}
         </div>
       </li>
     </ul>
